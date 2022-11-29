@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_travel.R
 \name{get_travel}
 \alias{get_travel}
-\title{Get Travel Time and Distance}
+\title{Get Travel Time, Distance and Route}
 \usage{
 get_travel(
   token,
@@ -17,7 +17,8 @@ get_travel(
   pt_mode = "TRANSIT",
   pt_max_dist = NULL,
   as_wide = TRUE,
-  parallel = FALSE
+  parallel = FALSE,
+  route_geom = FALSE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ get_travel(
 \item{as_wide}{Default = \code{TRUE}. Whether to return output as a list as a long tibble with each row a route, or a wide tibble with the same number of rows as the input tibble.}
 
 \item{parallel}{Default = \code{FALSE}. Whether to run API calls in parallel or sequentially (default).}
+
+\item{route_geom}{Default = \code{FALSE}. Whether to return decoded route_geometry. Will only be returned if \code{as_wide = FALSE}. Please ensure packages \code{googlePolylines} and \code{sf} are installed and note that this is a lossy conversion.}
 }
 \value{
 Original dataframe with total time and total distance for each route type.
@@ -53,7 +56,7 @@ Original dataframe with total time and total distance for each route type.
 If an error occurs, the output row will be have \code{NA}s for the additional variables, along with a warning message.
 }
 \description{
-This function is a wrapper for the \href{https://docs.onemap.sg/#route}{Route Service API}. It takes in a dataframe of start and end coordinates and returns the same dataframe with additional total time and total distance columns.
+This function is a wrapper for the \href{https://www.onemap.gov.sg/docs/#route}{Route Service API}. It takes in a dataframe of start and end coordinates and returns the same dataframe with total time, total distance and optionally route geometry.
 The function also accepts multiple arguments for `route` and `pt_mode`, allowing users to compare various route options.
 
 Note that if `as_wide = TRUE` is selected, any columns with identical names as the additional output columns will be overwritten.
@@ -80,6 +83,12 @@ sample <- data.frame(start_lat = c(1.3746617, 1.3567797, 1.3361976, 500),
     "start_lat", "start_lon", "end_lat", "end_lon",
     routes = c("walk", "pt"), pt_mode = c("bus", "transit"),
     as_wide = FALSE)}
+
+# no error, sf dataframe
+\dontrun{get_travel(token, sample[1:3, ],
+    "start_lat", "start_lon", "end_lat", "end_lon",
+    routes = c("drive", "pt"), pt_mode = c("bus", "transit"),
+    as_wide = FALSE, route_geom = TRUE)}
 
 # with error
 # warning message will show start/end/route/pt_mode for which an error occurred

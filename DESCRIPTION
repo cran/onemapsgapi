@@ -1,11 +1,11 @@
 Package: onemapsgapi
 Type: Package
 Title: R Wrapper for the 'OneMap.Sg API'
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: person("Jolene", "Lim", email = "jyl2187@columbia.edu",
       role = c("aut", "cre"))
 Maintainer: Jolene Lim <jyl2187@columbia.edu>
-Description: An R wrapper for the 'OneMap.Sg' API <https://docs.onemap.sg/>. 
+Description: An R wrapper for the 'OneMap.Sg' API <https://www.onemap.gov.sg/docs/>. 
     Functions help users query data from the API and return raw JSON data
     in "tidy" formats. Support is also available for users to retrieve data from multiple API calls 
     and integrate results into single dataframes, without
@@ -13,14 +13,13 @@ Description: An R wrapper for the 'OneMap.Sg' API <https://docs.onemap.sg/>.
     like to perform analyses with Singapore's spatial data without having to perform excessive data cleaning.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Depends: R (>= 2.10)
 Imports: rlang, httr, dplyr, purrr, stringr, tidyr, future, furrr
-RoxygenNote: 7.0.2
-Suggests: knitr, rmarkdown, sf, rgdal, sp
+RoxygenNote: 7.2.1
+Suggests: knitr, rmarkdown, sf, rgdal, sp, googlePolylines
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2020-01-25 19:55:45 UTC; jolene
+Packaged: 2022-11-29 07:26:08 UTC; jolene
 Author: Jolene Lim [aut, cre]
 Repository: CRAN
-Date/Publication: 2020-02-06 11:00:02 UTC
+Date/Publication: 2022-11-29 08:00:03 UTC

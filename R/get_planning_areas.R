@@ -1,10 +1,10 @@
 #' Get Planning Areas (All)
 #'
 #' @description
-#' This function is a wrapper for the \href{https://docs.onemap.sg/#planning-area-polygons}{Planning Area Polygons API}. It returns the data either in raw format or a combined sf or sp object.
+#' This function is a wrapper for the \href{https://www.onemap.gov.sg/docs/#planning-area-polygons}{Planning Area Polygons API}. It returns the data either in raw format or a combined sf or sp object.
 #'
 #' @param token User's API token. This can be retrieved using \code{\link{get_token}}
-#' @param year Optional, check \href{https://docs.onemap.sg/#planning-area-polygons}{documentation} for valid options. Invalid requests will are ignored by the API.
+#' @param year Optional, check \href{https://www.onemap.gov.sg/docs/#planning-area-polygons}{documentation} for valid options. Invalid requests will are ignored by the API.
 #' @param read Optional, which package to use to read geojson object. For "sf" objects, specify \code{read = "sf"} and for "sp" objects use \code{read = "rgdal"}. Note that if used, any missing geojson objects will be dropped (this affects the "Others" planning area returned by the API).
 #'
 #' @return If the parameter \code{read} is not specified, the function returns a raw JSON object with planning names and geojson string vectors. \cr \cr
@@ -13,9 +13,8 @@
 #' If an error occurs, the function returns NULL and a warning message is printed.
 #'
 #' @note
-#' The \code{read = "rgdal"} option will take a longer time to return an output than the \code{read = "sf"} option. \cr \cr
 #' If \code{read} is specified, any missing geojson objects will be dropped (this affects the "Others" planning area returned by the API). The returned outputs are NOT projected. \cr \cr
-#' If the user specifies a \code{read} method but does not have the corresponding package installed, the function will return the raw JSON and print a warning message.
+#' If the user specifies \code{read = "sp"}  but does not have the \code{sp} package installed, the function will return the raw JSON and print a warning message.
 #'
 #' @export
 #'
@@ -74,21 +73,17 @@ get_planning_areas <- function(token, year = NULL, read = NULL) {
 
   }
 
-  if (read == "sf" & requireNamespace("sf", quietly = TRUE)) {
-
+  if (read %in% c("sf", "rgdal") & requireNamespace("sf", quietly = TRUE)) {
     output <- output %>%
       map(function(x) sf::st_sf(name = x$pln_area_n, geometry = flatten(sf::st_read(x$geojson, quiet = TRUE)))) %>%
       reduce(rbind)
 
-  } else if (read == "rgdal" & requireNamespace("rgdal", quietly = TRUE)) {
-
-    output <- output %>%
-      map(function(x) sp::merge(rgdal::readOGR(x$geojson, verbose = FALSE), tibble(name = x$pln_area_n))) %>%
-      reduce(rbind)
+    if (read == "rdgal") {
+      output <- sf::as_Spatial(output)
+    }
 
   } else {
-    warning(paste0("Failed to read geojson. Please ensure you have package ", read, " installed.
-                   Only packages sf and rgdal (for sp) are supported currently."))
+    warning(paste0("Failed to read geojson. Please ensure you have package ", read, " installed."))
   }
 
   return(output)

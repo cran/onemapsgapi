@@ -1,7 +1,7 @@
 #' Get Theme Information
 #'
 #' @description
-#' This function is a wrapper for the \href{https://docs.onemap.sg/#get-theme-info}{Get Theme Info API}. It returns a named character vector of Theme Name and Query Name.
+#' This function is a wrapper for the \href{https://www.onemap.gov.sg/docs/#get-theme-info}{Get Theme Info API}. It returns a named character vector of Theme Name and Query Name.
 #'
 #' @param token User's API token. This can be retrieved using \code{\link{get_token}}
 #' @param theme Query name of theme. Themes’ query names can be retrieved using \code{\link{search_themes}}.
@@ -42,13 +42,13 @@ get_theme_info <- function(token, theme) {
 
   }
 
-  if (names(output)[1] == "error") {
-    warning(output$error)
+  if (names(response)[1] == "error") {
+    warning(response$error)
     output <- NULL
     return(output)
 
   } else {
-    output <- output %>%
+    output <- content(response) %>%
       unlist()
 
   }
